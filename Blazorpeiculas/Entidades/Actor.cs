@@ -12,4 +12,21 @@ public class Actor
     public DateTime? FechaNacimiento { get; set; }
 
     public IBrowserFile? FotoArchivo { get; set; }
+    public string? Personaje { get; set; }
+
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is Actor a2)
+        {
+            return Id == a2.Id;
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

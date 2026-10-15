@@ -10,16 +10,18 @@
               ImagenURL="@Pelicula.PosterURL" />
 
               <SelectorMultiple Label="Generos" Seleccionados="Seleccionados" NoSeleccionados="NoSeleccionados"/>
+              <BPAutocompleteActor ActoresSeleccionados="ActoresSeleccionados"/>
 </FormularioEntidad>
 
 @code {
-    [Parameter] public List<Generos> GenerosSeleccionados { get; set; } = [];
-    [Parameter, EditorRequired] public List<Generos> GenerosNoSeleccionados { get; set; } = [];
-    [Parameter, EditorRequired] public Pelicula Pelicula { get; set; } = null!;
-    [Parameter, EditorRequired] public bool FormularioPosteadoConExito { get; set; } = false;
-    [Parameter, EditorRequired] public bool PosteoEnCurso { get; set; } = false;
-    [Parameter, EditorRequired] public EventCallback OnValidSubmit { get; set; }
-    [Parameter] public bool FormularioInvalido { get; set; } = true;
+        [Parameter] public List<Actor> ActoresSeleccionados { get; set; } = [];
+        [Parameter] public List<Generos> GenerosSeleccionados { get; set; } = [];
+        [Parameter, EditorRequired] public List<Generos> GenerosNoSeleccionados { get; set; } = [];
+        [Parameter, EditorRequired] public Pelicula Pelicula { get; set; } = null!;
+        [Parameter, EditorRequired] public bool FormularioPosteadoConExito { get; set; } = false;
+        [Parameter, EditorRequired] public bool PosteoEnCurso { get; set; } = false;
+        [Parameter, EditorRequired] public EventCallback OnValidSubmit { get; set; }
+        [Parameter] public bool FormularioInvalido { get; set; } = true;
 
     private List<SelectorMultipleModelo> Seleccionados { get; set; } = [];
     private List<SelectorMultipleModelo> NoSeleccionados { get; set; } = [];
@@ -37,6 +39,14 @@
     {
         Pelicula.GenerosPeliculas = Seleccionados
             .Select(x => new GeneroPelicula { GeneroId = int.Parse(x.Identificador) }).ToList();
+
+        Pelicula.ActoresPeliculas = ActoresSeleccionados.Select ((actor, indice) => new ActorPelicula
+        {
+            ActorId = actor.Id,
+            Personaje=actor.Personaje,
+            Orden = indice
+		}).ToList();
+
 
         await OnValidSubmit.InvokeAsync();
     }

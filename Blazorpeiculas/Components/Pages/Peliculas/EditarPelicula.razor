@@ -14,6 +14,7 @@ else
                         FormularioInvalido="false" OnValidSubmit="Editar" Pelicula="pelicula" 
                         GenerosNoSeleccionados="GenerosNoSeleccionados"
                         GenerosSeleccionados="GenerosSeleccionados"
+                        ActoresSeleccionados="ActoresSeleccionados"
                         />
 }
     
@@ -26,6 +27,7 @@ else
 
     private List<Generos> GenerosNoSeleccionados = new List<Generos>();
     private List<Generos> GenerosSeleccionados = new List<Generos>();
+	private List<Actor> ActoresSeleccionados = [];
 
     protected override void OnInitialized()
     {
@@ -51,6 +53,11 @@ else
     new Generos { Id = 2, Nombre = "Drama" }
 };
 
+        ActoresSeleccionados = new()
+{
+    new() { Id = 1, Nombre = "Bob esponja", Personaje = "bob esponja2", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlToAPP3incqrXTkvbfFMlRZ93a7YwwOBJQ339YqNnxQ&s=10" }
+};
+
     }
     private async Task Editar()
     {
@@ -66,6 +73,9 @@ else
 
             Console.WriteLine("--Generos--");
             pelicula.GenerosPeliculas.ForEach(x => Console.WriteLine(x.GeneroId));
+
+            Console.WriteLine("--Actores--");
+            pelicula.ActoresPeliculas.ForEach(x => Console.WriteLine($"{x.ActorId} - {x.Personaje}"));
 
             posteoEnCurso = false;
             formularioPosteadoConExito = true;

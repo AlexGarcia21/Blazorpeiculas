@@ -1,0 +1,105 @@
+﻿@using static MudBlazor.CategoryTypes
+
+<div class="mb-3">
+    <label>Actores: </label>
+    <div>
+        <MudAutocomplete T="Actor"
+                         Placeholder="Seleccione un actor..."
+                         SearchFunc="Search"
+                         ToStringFunc="@(e => e?.Nombre ?? string.Empty)"
+                         Value="actorSeleccionado"
+                         ValueChanged="ValueChanged"
+                         @ref="mudAutocomplete">
+            <ItemTemplate Context="actor">
+                <img style="width: 50px; height: 50px;" src="@actor.FotoURL" /> @actor.Nombre
+            </ItemTemplate>
+        </MudAutocomplete>
+
+        <ul class="list-group mt-2">
+            @foreach (var item in ActoresSeleccionados)
+            {
+                <li draggable="true"
+                    @ondragstart="@(() => HandleDragStar(item))"
+                    @ondragover="@(() => HandleDragOver(item))"
+                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+
+                    <div>
+                        @item.Nombre / <input type="text" placeholder="Personaje" @bind="item.Personaje" class="form-control d-inline-block w-auto ms-2" />
+                    </div>
+
+                    <span @onclick="@(() => ActoresSeleccionados.Remove(item))"
+                          class="badge bg-danger rounded-pill"
+                          style="cursor:pointer">
+                        X
+                    </span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<Actor> ActoresSeleccionados { get; set; } = [];
+
+    Actor? actorSeleccionado;
+    private MudAutocomplete<Actor>? mudAutocomplete;
+    Actor? itemArrastrado;
+
+    private async Task<IEnumerable<Actor>> 
+    Search(string value, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return new List<Actor>();
+        }
+
+        var lista = new List<Actor>
+        {
+            new Actor { Id=1, Nombre = "Bob esponja", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlToAPP3incqrXTkvbfFMlRZ93a7YwwOBJQ339YqNnxQ&s=10" },
+            new Actor { Id=2, Nombre = "Bob", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfmRymW8d6z601yGpOH9ANf2027Ei1mlgT3KzxjTGE-g&s=10" },
+            new Actor { Id=3, Nombre = "Sebastian rully", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKcGjtewo0BIkOhQg6-NPpvuWEvgX_gkSk2iFWbkBVWw&s=10" },
+        };
+
+        return lista.Where(x => x.Nombre!.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private async Task ValueChanged(Actor actor)
+    {
+        if (actor is null)
+        {
+            return;
+        }
+
+        if (!ActoresSeleccionados.Any(x => x!.Equals(actor)))
+        {
+            ActoresSeleccionados.Add(actor);
+        }
+
+        actorSeleccionado = null;
+
+        if (mudAutocomplete is not null)
+        {
+            await mudAutocomplete!.ClearAsync();
+        }
+    }
+
+    private void HandleDragStar(Actor item)
+    {
+        itemArrastrado = item;
+    }
+
+    private void HandleDragOver(Actor item)
+    {
+        if (itemArrastrado is null || item.Nombre == itemArrastrado.Nombre)
+        {
+            return;
+        }
+
+        var indiceElementoArrastrado = ActoresSeleccionados.IndexOf(itemArrastrado);
+        var indiceElemento = ActoresSeleccionados.IndexOf(item);
+
+        ActoresSeleccionados[indiceElemento] = itemArrastrado;
+        ActoresSeleccionados[indiceElementoArrastrado] = item;
+       
+    }
+}
