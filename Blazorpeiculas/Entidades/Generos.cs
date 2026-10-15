@@ -9,5 +9,6 @@ namespace Blazorpeiculas.Entidades
         [Required(ErrorMessage ="El campo {0} es requerido")]
         [PrimeraLetraMayuscula]
         public string? Nombre { get; set; }
+        public List<GeneroPelicula> GenerosPeliculas { get; set; } = [];
     }
 }

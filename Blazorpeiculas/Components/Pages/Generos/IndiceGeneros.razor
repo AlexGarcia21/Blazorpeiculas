@@ -1,4 +1,6 @@
 ﻿@page "/generos"
+@using Blazorpeiculas.DTOs
+@inject IServiciosGeneros serviciosGeneros
 <h3>IndiceGeneros</h3>
 <div>
     <BPLink Href="generos/crear">
@@ -6,6 +8,49 @@
     </BPLink>
 </div>
 
-@code {
+<ListadoGenerico Listado="generos">
+    <HayRegistrosCompleto>    <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var genero in generos!)
+                {
+                    <tr @key="genero.Id">
+                        <td>
+                            <BPLink Href="">Editar</BPLink>
+                            <BPBoton Variante="Variante.Error">Eliminar</BPBoton>
+                        </td>
+                        <td>
+							@genero.Nombre
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
+    </HayRegistrosCompleto>
+   
+</ListadoGenerico>
+
+@code {
+    private IEnumerable<Generos>? generos = null;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+        await Task.Yield();
+        var pagina = 1;
+		var registrosPorPagina = 5;
+		var paginacionDTO = new PaginacionDTO(pagina,registrosPorPagina);
+		var respuesta = await serviciosGeneros.Obtener(paginacionDTO);
+		generos = respuesta.Elementos;
+		StateHasChanged();
+	}
 }
+    

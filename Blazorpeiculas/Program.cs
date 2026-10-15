@@ -1,17 +1,18 @@
 using Blazorpeiculas;
 using Blazorpeiculas.Components;
+using Blazorpeiculas.Datos;
 using Blazorpeiculas.Servicios;
 using Microsoft.AspNetCore.Components;
-using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddMudServices();
+
 
 builder.Services.AddScoped<IServicioPeliculas, ServicioPeliculasEnMemoria>();
+builder.Services.AddScoped<IServiciosGeneros, ServicioGeneros>();
 
 var app = builder.Build();
 

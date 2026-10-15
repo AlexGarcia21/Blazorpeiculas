@@ -1,7 +1,10 @@
 ﻿@page "/generos/crear"
+@using Blazorpeiculas.Datos
 @using Blazorpeiculas.Utilidades
+@using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
 @inject IJSRuntime JS
+@inject IServiciosGeneros serviciosGeneros
 @inject NavigationManager navigationManager
 <h3>Crear Genero</h3>
 
@@ -21,18 +24,22 @@
     {
         genero = new Generos();
     }
-    
+
 
     private async Task Crear()
     {
         if (!posteoEnCurso)
         {
             posteoEnCurso = true;
-            Console.WriteLine("Ejecutando metodo crear");
-            await Task.Delay(2000);
-            Console.WriteLine($"nombre del genero: {genero.Nombre}");
+            StateHasChanged();
+            await Task.Yield();
+
+			await serviciosGeneros.Crear(genero);
+
+
             posteoEnCurso = false;
             formularioPosteadoConExito = true;
+			StateHasChanged();
             navigationManager.NavigateTo("/Generos");
         }
 

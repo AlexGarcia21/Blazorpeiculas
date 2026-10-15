@@ -1,6 +1,7 @@
 ﻿using Blazorpeiculas.Entidades;
 using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlazorPeliculas.Entidades;
 
@@ -13,6 +14,7 @@ public class Pelicula
     public string? Trailer { get; set; }
     public DateTime? FechaLanzamiento { get; set; }
     public string? PosterURL { get; set; }
+    [NotMapped]
     public IBrowserFile? PosterArchivo { get; set; }
 
     public List<GeneroPelicula> GenerosPeliculas { get; set; } = [];
