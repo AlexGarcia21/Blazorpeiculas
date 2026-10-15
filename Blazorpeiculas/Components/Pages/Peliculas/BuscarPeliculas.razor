@@ -1,0 +1,99 @@
+﻿@page "/peliculas/buscar"
+@inject IServicioPeliculas servicioPeliculas
+@rendermode InteractiveServer
+<h3>BuscarPeliculas</h3>
+
+<div class="row g-3 align-items-center mb-3">
+    <div class="col-sm-3">
+        <input type="text" class="form-control" id="titulo" placeholder="Titulo Pelicula"
+        @bind="titulo" @bind:event="oninput"
+        @onkeypress="@((KeyboardEventArgs e) => TituloKeyPress(e))"autocomplete="off" />
+
+    </div>
+
+    <div class="col-sm-3">
+        <select class="form-select" @bind="generoId">
+            <option value="0">--- Seleccione un genero ---</option>
+            @foreach (var item in generos)
+            {
+                <option value="@item.Id">@item.Nombre</option>
+            }
+                
+        </select>
+    </div>
+
+    <div class=" col-sm-6 d-flex">
+        <div class="me-2">
+            <BPCheckbox Label="Futuros Estrenos" @bind-Value="futurosEstrenos" />
+        </div>
+
+        
+            <div class="me-2">
+                <BPCheckbox Label="En Cartelera:" @bind-Value="enCartelera" />
+            </div>
+       
+
+
+            <div class="me-2">
+                <BPCheckbox Label="Mas votadas:" @bind-Value="masVotadas" />
+            </div>
+
+            <div class="col-12">
+            <BPBoton OnClick="CargarNuevasPeliculas">Filtrar</BPBoton>
+            <BPBoton Variante="Variante.Error" OnClick="Limpiar"> Limpiar</BPBoton>
+            </div>
+       
+    </div> 
+</div>
+
+<ListadoPeliculas Peliculas="Peliculas"></ListadoPeliculas>
+
+@code { 
+
+    private string titulo = "";
+    private int generoId = 0;
+    private bool futurosEstrenos = false;
+    private bool enCartelera = false;
+    private bool masVotadas = false;
+    private List<Generos> generos = new List<Generos>();
+    private List<Pelicula>? Peliculas;
+
+    protected override void OnInitialized()
+    {
+        generos = new List<Generos>{new() {Id=1, Nombre="Accion"},
+        new() { Id = 2, Nombre = "Dramas" }
+        };
+        Peliculas = servicioPeliculas.Obtenerpeliculas();
+
+    }
+
+    private void TituloKeyPress(KeyboardEventArgs e)
+    {
+        if(e.Key == "Enter"){
+            CargarNuevasPeliculas();
+        }
+    }
+
+    private void CargarNuevasPeliculas()
+    {
+        Peliculas = servicioPeliculas.Obtenerpeliculas()
+        .Where (x => x.Titulo.ToLower().Contains(titulo.ToLower())).ToList();
+
+        Console.WriteLine($"titulo:{titulo}");
+        Console.WriteLine($"generoId:{generoId}");
+        Console.WriteLine($"encartelera:{enCartelera}");
+        Console.WriteLine($"futurosEstrenos:{futurosEstrenos}");
+        Console.WriteLine($"masVotadas:{masVotadas}");
+    }
+
+    private void Limpiar()
+    {
+        Peliculas = servicioPeliculas.Obtenerpeliculas();
+        titulo = "";
+        generoId = 0;
+        futurosEstrenos=false;
+        enCartelera = false;
+        masVotadas = false;
+    }
+
+}

@@ -1,0 +1,45 @@
+﻿@page "/generos/crear"
+@using Blazorpeiculas.Utilidades
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@inject NavigationManager navigationManager
+<h3>Crear Genero</h3>
+
+<FormularioGenero FormularioPosteadoConExito="formularioPosteadoConExito"
+    PosteoEnCurso="posteoEnCurso"
+    OnValidSubmit="Crear" Generos="genero" />
+
+
+@code {
+    private Generos genero = null!;
+
+    private bool posteoEnCurso = false;
+    private bool formularioPosteadoConExito = false;
+
+
+    protected override void OnInitialized()
+    {
+        genero = new Generos();
+    }
+    
+
+    private async Task Crear()
+    {
+        if (!posteoEnCurso)
+        {
+            posteoEnCurso = true;
+            Console.WriteLine("Ejecutando metodo crear");
+            await Task.Delay(2000);
+            Console.WriteLine($"nombre del genero: {genero.Nombre}");
+            posteoEnCurso = false;
+            formularioPosteadoConExito = true;
+            navigationManager.NavigateTo("/Generos");
+        }
+
+    }
+   
+
+    
+    }
+
+    

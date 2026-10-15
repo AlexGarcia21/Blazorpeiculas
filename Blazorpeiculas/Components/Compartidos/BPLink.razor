@@ -1,0 +1,50 @@
+﻿<NavLink @attributes="AtributosAdicionales" href="@Href" class="@ClaseCss">
+    @ChildContent
+</NavLink>
+
+@code {
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter, EditorRequired] public string Href { get; set; } = null!;
+    [Parameter] public Tamaño Tamaño { get; set; } = Tamaño.Md;
+    [Parameter] public Variante Variante { get; set; } = Variante.Primario;
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AtributosAdicionales { get; set; }
+
+    private string ClaseCss
+    {
+        get
+        {
+            var clasesDeCSSPadre = string.Empty;
+            if (AtributosAdicionales is not null && AtributosAdicionales.ContainsKey("class"))
+            {
+                clasesDeCSSPadre = AtributosAdicionales["class"]?.ToString() ?? string.Empty;
+            }
+
+            var claseVariante = Variante switch
+            {
+                Variante.Primario => "btn-primary",
+                Variante.Secundario => "btn-secondary",
+                Variante.Exitoso => "btn-success",
+                Variante.Advertencia => "btn-warning",
+                Variante.Error => "btn-danger",
+                _ => "btn-primary"
+            };
+
+            var claseTamaño = Tamaño switch
+            {
+                Tamaño.Sm => "btn-sm",
+                Tamaño.Lg => "btn-lg",
+                _ => string.Empty
+            };
+
+            string[] clases = [
+                "btn",
+                claseVariante,
+                claseTamaño,
+                clasesDeCSSPadre
+            ];
+
+            return string.Join(" ", clases.Where(c => !string.IsNullOrWhiteSpace(c)));
+        }
+    }
+}

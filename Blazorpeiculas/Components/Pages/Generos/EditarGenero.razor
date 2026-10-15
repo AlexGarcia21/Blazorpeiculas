@@ -1,0 +1,41 @@
+﻿@page "/generos/editar/{Id:int}"
+@inject NavigationManager navigationManager
+<h3>EditarGenero</h3>
+
+@if(generos is null)
+{
+    <Cargando />
+}else{
+<FormularioGenero FormularioPosteadoConExito="FormularioPosteadoConExito"
+                  PosteoEnCurso="PosteoEnCurso"
+              FormularioInvalido="false"    OnValidSubmit="Editar" Generos="generos" />
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Generos generos = null!;
+    private bool FormularioPosteadoConExito = false;
+    private bool PosteoEnCurso = false;
+
+    protected override void OnInitialized()
+    {
+        generos = new() {Id = Id,Nombre ="Accion"};
+    }
+
+    private async Task Editar()
+    {
+        if (!PosteoEnCurso)
+        {
+            PosteoEnCurso = true;
+            Console.WriteLine("Ejecutando metodo Editar");
+            await Task.Delay(2000); 
+            Console.WriteLine($"Id del genero:{generos.Id}");
+            Console.WriteLine($"nombre del genero: {generos.Nombre}");
+            PosteoEnCurso = false;
+            FormularioPosteadoConExito = true;
+            StateHasChanged();
+            navigationManager.NavigateTo("/Generos");
+        }
+
+    }
+}

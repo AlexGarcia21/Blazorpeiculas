@@ -1,0 +1,76 @@
+﻿@page "/peliculas/editar/{Id:int}"
+@inject NavigationManager navigationManager
+
+<h3>EditarPelicula</h3>
+
+@if (pelicula is null)
+{
+    <Cargando />
+}
+else
+{
+    <FormularioPelicula FormularioPosteadoConExito="formularioPosteadoConExito"
+                        PosteoEnCurso="posteoEnCurso"
+                        FormularioInvalido="false" OnValidSubmit="Editar" Pelicula="pelicula" 
+                        GenerosNoSeleccionados="GenerosNoSeleccionados"
+                        GenerosSeleccionados="GenerosSeleccionados"
+                        />
+}
+    
+@code {
+
+    [Parameter] public int Id { get; set; }
+    private bool formularioPosteadoConExito = false;
+    private bool posteoEnCurso = false;
+    private Pelicula pelicula = null!;
+
+    private List<Generos> GenerosNoSeleccionados = new List<Generos>();
+    private List<Generos> GenerosSeleccionados = new List<Generos>();
+
+    protected override void OnInitialized()
+    {
+        pelicula = new()
+        {
+            Id = Id,
+            Titulo = "Peli 1",
+            FechaLanzamiento = new DateTime(2012, 05, 25),
+            EnCartelera = true,
+            Trailer = "abc",
+            PosterURL = "https://fotografias-2.larazon.es/assets/2026/04/luffy-gear-5-nuevo.jpg?width=1900&height=1069"
+        };
+
+        GenerosNoSeleccionados = new List<Generos>()
+{
+    new Generos() { Id = 1, Nombre = "Comedia" },
+    new Generos() { Id = 3, Nombre = "Acción" },
+    new Generos() { Id = 4, Nombre = "Sci-fi" },
+};
+
+        GenerosSeleccionados = new List<Generos>()
+{
+    new Generos { Id = 2, Nombre = "Drama" }
+};
+
+    }
+    private async Task Editar()
+    {
+        if (!posteoEnCurso)
+        {
+            posteoEnCurso = true;
+            Console.WriteLine("Ejecutando método Editar");
+            await Task.Delay(2000);
+            Console.WriteLine($"Titulo: {pelicula.Titulo}");
+            Console.WriteLine($"Fecha de lanzamiento: {pelicula.FechaLanzamiento}");
+            Console.WriteLine($"¿Hay imagen?: {pelicula.PosterArchivo is not null}");
+            Console.WriteLine($"En cartelera: {pelicula.EnCartelera}");
+
+            Console.WriteLine("--Generos--");
+            pelicula.GenerosPeliculas.ForEach(x => Console.WriteLine(x.GeneroId));
+
+            posteoEnCurso = false;
+            formularioPosteadoConExito = true;
+            StateHasChanged();
+            navigationManager.NavigateTo($"/peliculas/{Id}");
+        }
+    }
+}
