@@ -8,6 +8,13 @@ namespace Blazorpeiculas.Servicios;
 
 public class ServicioGeneros(IDbContextFactory<ApplicationDbContext> dbFactory) : IServiciosGeneros
 {
+    public async Task Actualizar(Generos genero)
+    {
+         using var context = dbFactory.CreateDbContext();
+        context.Update(genero);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<int> Crear(Generos genero)
     {
         using var context = dbFactory.CreateDbContext();
@@ -37,5 +44,11 @@ public class ServicioGeneros(IDbContextFactory<ApplicationDbContext> dbFactory) 
             Elementos = elementos,
             CantidadTotalRegistros = cantidadTotalRegistros
         };
+    }
+
+    public async Task<Generos> ObtenerPorId(int id)
+    {
+        using var context = dbFactory.CreateDbContext();
+        return await context.Generos.FirstOrDefaultAsync(g => g.Id == id);
     }
 }

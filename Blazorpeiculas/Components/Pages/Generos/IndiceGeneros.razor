@@ -9,7 +9,16 @@
 </div>
 
 <ListadoGenerico Listado="generos">
-    <HayRegistrosCompleto>    <table class="table table-striped">
+    <HayRegistrosCompleto>   
+
+        <Paginacion PaginaActual="paginaActual"
+            CantidadTotalRegistros="cantidadTotalRegistros" 
+            RegistrosPorPagina="registrosPorPagina"
+            PaginaSeleccionada="PaginaSeleccionada"
+            />
+        
+        
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th></th>
@@ -21,7 +30,7 @@
                 {
                     <tr @key="genero.Id">
                         <td>
-                            <BPLink Href="">Editar</BPLink>
+                            <BPLink Href="@($"/generos/editar/{genero.Id}")">Editar</BPLink>
                             <BPBoton Variante="Variante.Error">Eliminar</BPBoton>
                         </td>
                         <td>
@@ -38,6 +47,14 @@
 
 @code {
     private IEnumerable<Generos>? generos = null;
+    private int paginaActual = 1;       
+	private int registrosPorPagina = 10;
+	private int cantidadTotalRegistros;
+
+
+
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
@@ -45,12 +62,25 @@
             return;
         }
         await Task.Yield();
-        var pagina = 1;
-		var registrosPorPagina = 5;
-		var paginacionDTO = new PaginacionDTO(pagina,registrosPorPagina);
-		var respuesta = await serviciosGeneros.Obtener(paginacionDTO);
-		generos = respuesta.Elementos;
+		await Cargar();
 		StateHasChanged();
 	}
+
+	private async Task Cargar(int pagina = 1)
+	{
+		var paginacionDTO = new PaginacionDTO(pagina, registrosPorPagina);
+		var resultadoPaginado = await serviciosGeneros.Obtener(paginacionDTO);
+		generos = resultadoPaginado.Elementos;
+		cantidadTotalRegistros = resultadoPaginado.CantidadTotalRegistros;
+		StateHasChanged();
+    }
+
+	private async Task PaginaSeleccionada(int pagina)
+	{
+		paginaActual = pagina;
+		await Cargar(pagina);
 }
+
+}
+
     

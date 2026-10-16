@@ -6,4 +6,6 @@ public interface IServiciosGeneros
 {
     Task<int> Crear(Generos genero);
     Task<ResultadoPaginadoDTO<Generos>>Obtener(PaginacionDTO paginacionDTO);
+    Task Actualizar (Generos genero);
+    Task <Generos> ObtenerPorId(int id);
 }
