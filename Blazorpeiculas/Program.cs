@@ -19,6 +19,8 @@ builder.Services.AddDbContextFactory<ApplicationDbContext>(opciones =>
 
 builder.Services.AddScoped<IServicioPeliculas, ServicioPeliculasEnMemoria>();
 builder.Services.AddScoped<IServiciosGeneros, ServicioGeneros>();
+builder.Services.AddScoped<IServicioActores, ServicioActores>();
+
 
 var app = builder.Build();
 

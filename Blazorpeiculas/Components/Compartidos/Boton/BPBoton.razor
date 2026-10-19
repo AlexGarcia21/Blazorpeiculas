@@ -1,8 +1,10 @@
-﻿<button type="@Tipo.ToString().ToLower()"
+﻿@inject IJSRuntime JS
+
+<button type="@Tipo.ToString().ToLower()"
         class="@ClaseCSS"
         disabled="@Disabled"
         @attributes="AtributosAdicionales"
-        @onclick="Onclick">
+        @onclick="OnClickInterno">
     @ChildContent
 </button>
 
@@ -15,8 +17,23 @@
     [Parameter(CaptureUnmatchedValues = true)] 
     public Dictionary<string, object>? AtributosAdicionales { get; set; }
     [Parameter] public EventCallback Onclick { get; set; }
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; } =@<text>Enviar</text>;
+    [Parameter] public RenderFragment? ChildContent { get; set; } =@<text>Enviar</text>;
+    [Parameter] public string? MensajeConfirmacino { get; set; }
+
+
+    private async Task OnClickInterno()
+    {
+		if (!string.IsNullOrEmpty(MensajeConfirmacino))
+		{
+			var confirmacion = await JS.Confirm( MensajeConfirmacino);
+			if (!confirmacion)
+			{
+				return;
+			}
+		}
+		await Onclick.InvokeAsync();
+
+    }
 
 
 

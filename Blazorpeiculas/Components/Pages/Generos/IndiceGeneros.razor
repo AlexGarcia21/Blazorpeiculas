@@ -32,7 +32,10 @@
                         <td>
                             <BPLink Href="@($"/generos/editar/{genero.Id}")">Editar</BPLink>
                             <BPBoton Onclick="@(() => BorrarGenero(genero.Id))"
-                                Variante="Variante.Error">Eliminar</BPBoton>
+                                Variante="Variante.Error"
+                                MensajeConfirmacino="@($"¿Estás seguro de que quieres eliminar este género {genero.Nombre}?")">
+                                Eliminar
+                            </BPBoton>
                         </td>
                         <td>
 							@genero.Nombre
