@@ -31,7 +31,8 @@
                     <tr @key="genero.Id">
                         <td>
                             <BPLink Href="@($"/generos/editar/{genero.Id}")">Editar</BPLink>
-                            <BPBoton Variante="Variante.Error">Eliminar</BPBoton>
+                            <BPBoton Onclick="@(() => BorrarGenero(genero.Id))"
+                                Variante="Variante.Error">Eliminar</BPBoton>
                         </td>
                         <td>
 							@genero.Nombre
@@ -79,7 +80,13 @@
 	{
 		paginaActual = pagina;
 		await Cargar(pagina);
-}
+    }
+
+	private async Task BorrarGenero(int id)
+	{
+		await serviciosGeneros.Borrar(id);
+		await Cargar();
+	}
 
 }
 

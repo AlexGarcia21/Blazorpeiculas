@@ -8,4 +8,6 @@ public interface IServiciosGeneros
     Task<ResultadoPaginadoDTO<Generos>>Obtener(PaginacionDTO paginacionDTO);
     Task Actualizar (Generos genero);
     Task <Generos> ObtenerPorId(int id);
+    Task <bool> Borrar(int id);
+
 }

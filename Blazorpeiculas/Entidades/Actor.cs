@@ -19,5 +19,5 @@ public class Actor
     public string? Personaje { get; set; }
 
 
-    public IBrowserFile? FotoArchivo { get; set; }
+
 }

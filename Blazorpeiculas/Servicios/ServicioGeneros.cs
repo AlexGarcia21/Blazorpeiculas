@@ -15,6 +15,14 @@ public class ServicioGeneros(IDbContextFactory<ApplicationDbContext> dbFactory) 
         await context.SaveChangesAsync();
     }
 
+    public async Task<bool> Borrar(int id)
+    {
+        using var context = dbFactory.CreateDbContext();
+        var elementosBorrados= await context.Generos.Where(x => x.Id == id)
+            .ExecuteDeleteAsync();
+        return elementosBorrados == 1;
+    }
+
     public async Task<int> Crear(Generos genero)
     {
         using var context = dbFactory.CreateDbContext();

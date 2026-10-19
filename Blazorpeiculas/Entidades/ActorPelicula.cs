@@ -1,4 +1,7 @@
-﻿public class ActorPelicula
+﻿using Blazorpeiculas.Entidades;
+using BlazorPeliculas.Entidades;
+
+public class ActorPelicula
 { 
     public int ActorId { get; set; }
     public int PeliculaId { get; set; }
@@ -9,4 +12,3 @@
     public Pelicula? Pelicula { get; set; }
 
 } 
-}
