@@ -13,25 +13,27 @@
 
 
     <h3>En cartelera</h3>
-    <ListadoPeliculas Peliculas="enCartelera"  />
+    <ListadoPeliculas Peliculas="_homeDTO.EnCartelera"  />
    
 
     <h3>En futuro</h3>
-    <ListadoPeliculas Peliculas="futurosEstrenos" />
+    <ListadoPeliculas Peliculas="_homeDTO.FuturosEstrenos" />
 
 @code {
-    private List<Pelicula>? enCartelera = null;
-    private List<Pelicula>? futurosEstrenos = null;
-
-    protected override void OnInitialized()
+    private HomeDTO _homeDTO = new();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        enCartelera = servicioPeliculas.Obtenerpeliculas();
+        if (!firstRender)
+        {
+            return;
+        }
 
+        await Task.Yield();
 
-        futurosEstrenos = servicioPeliculas.Obtenerpeliculas();
+        _homeDTO = await servicioPeliculas.ObtenerPeliculasHome();
+        StateHasChanged();
+    }   
 
-    }
-
-   
+ 
 
 }

@@ -22,17 +22,24 @@
         if (!posteoEnCurso)
         {
             posteoEnCurso = true;
-          
-			StateHasChanged();
-			await Task.Yield();
-			await servicioActores.Crear(actor);
 
+            StateHasChanged();
+            await Task.Yield();
+
+            var browserFile = (actor.FotoArchivo);
+
+            if (browserFile is not null)
+            {
+                actor.Archivo = browserFile.ConvertirAArchivoDTO();
+            }
+
+            // Una única llamada para guardar (tenga o no tenga imagen)
+            await servicioActores.Crear(actor);
 
             posteoEnCurso = false;
             formularioPosteadoConExito = true;
             StateHasChanged();
             navigationManager.NavigateTo("/actores");
         }
-
     }
-}
+ }

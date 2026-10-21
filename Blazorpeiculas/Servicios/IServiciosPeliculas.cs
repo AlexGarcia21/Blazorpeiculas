@@ -1,9 +1,13 @@
-﻿using Blazorpeiculas.Entidades;
+﻿using Blazorpeiculas.DTOs;
+using Blazorpeiculas.Entidades;
 using BlazorPeliculas.Entidades;
 
 namespace Blazorpeiculas.Servicios;
 
 public interface IServicioPeliculas
 {
-    List<Pelicula> Obtenerpeliculas();
+    Task<int> Crear(Pelicula pelicula);
+    Task<HomeDTO> ObtenerPeliculasHome();
+    Task<PeliculaDetalleDTO> ObtenerDetalle( int id);
+
 }

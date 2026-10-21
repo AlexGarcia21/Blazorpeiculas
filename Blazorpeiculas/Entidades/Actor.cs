@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Blazorpeiculas.DTOs;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +14,13 @@ public class Actor
     public string? FotoURL { get; set; }
     public DateTime? FechaNacimiento { get; set; }
     public List<ActorPelicula> ActoresPeliculas { get; set; } = [];
+
     [NotMapped]
     public IBrowserFile? FotoArchivo { get; set; }
     [NotMapped]
     public string? Personaje { get; set; }
+    [NotMapped]
+    public ArchivoDTO? Archivo { get; set; }
 
 
 

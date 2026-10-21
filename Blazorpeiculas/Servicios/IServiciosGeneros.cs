@@ -9,5 +9,5 @@ public interface IServiciosGeneros
     Task Actualizar (Generos genero);
     Task <Generos> ObtenerPorId(int id);
     Task <bool> Borrar(int id);
-
+    Task<IEnumerable<Generos>> ObtenerTodos();
 }

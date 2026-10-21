@@ -1,7 +1,9 @@
 ﻿@using Blazorpeiculas.Components.Compartidos.SelectorMultiple;
 <FormularioEntidad Entidad="Pelicula" FormularioPosteadoConExito="FormularioPosteadoConExito"
                    PosteoEnCurso="PosteoEnCurso"
-                   OnValidSubmit="PosteoFormulario" FormularioInvalido="FormularioInvalido">
+                   OnValidSubmit="PosteoFormulario" FormularioInvalido="FormularioInvalido"
+                   DestinoCancelar="/peliculas/buscar"
+>
     <BPInputText Label="Título" @bind-Value="@Pelicula.Titulo" />
     <BPInputText Label="Trailer" @bind-Value="@Pelicula.Trailer" />             
     <BPInputDate Label="Fecha de Lanzamiento" @bind-Value="@Pelicula.FechaLanzamiento" />

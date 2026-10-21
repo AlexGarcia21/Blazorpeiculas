@@ -1,5 +1,5 @@
 ﻿@using static MudBlazor.CategoryTypes
-
+@inject IServicioActores servicioActores
 <div class="mb-3">
     <label>Actores: </label>
     <div>
@@ -53,14 +53,8 @@
             return new List<Actor>();
         }
 
-        var lista = new List<Actor>
-        {
-            new Actor { Id=1, Nombre = "Bob esponja", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlToAPP3incqrXTkvbfFMlRZ93a7YwwOBJQ339YqNnxQ&s=10" },
-            new Actor { Id=2, Nombre = "Bob", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfmRymW8d6z601yGpOH9ANf2027Ei1mlgT3KzxjTGE-g&s=10" },
-            new Actor { Id=3, Nombre = "Sebastian rully", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKcGjtewo0BIkOhQg6-NPpvuWEvgX_gkSk2iFWbkBVWw&s=10" },
-        };
-
-        return lista.Where(x => x.Nombre!.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        var actores = await servicioActores.ObtenerPorNombre(value);
+        return actores;
     }
 
     private async Task ValueChanged(Actor actor)

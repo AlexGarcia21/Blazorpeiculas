@@ -1,4 +1,5 @@
-﻿using Blazorpeiculas.Entidades;
+﻿using Blazorpeiculas.DTOs;
+using Blazorpeiculas.Entidades;
 using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,7 +17,11 @@ public class Pelicula
     public string? PosterURL { get; set; }
     [NotMapped]
     public IBrowserFile? PosterArchivo { get; set; }
+    [NotMapped]
+    public ArchivoDTO? Archivo { get; set; }
+
 
     public List<GeneroPelicula> GenerosPeliculas { get; set; } = [];
     public List<ActorPelicula> ActoresPeliculas { get; set; } = [];
+    public string? TituloFormateadoParaURL => Titulo?.Replace(" ", "-");
 }

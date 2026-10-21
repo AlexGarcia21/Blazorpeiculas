@@ -63,7 +63,7 @@
         generos = new List<Generos>{new() {Id=1, Nombre="Accion"},
         new() { Id = 2, Nombre = "Dramas" }
         };
-        Peliculas = servicioPeliculas.Obtenerpeliculas();
+        //Peliculas = servicioPeliculas.Obtenerpeliculas();
 
     }
 
@@ -76,8 +76,8 @@
 
     private void CargarNuevasPeliculas()
     {
-        Peliculas = servicioPeliculas.Obtenerpeliculas()
-        .Where (x => x.Titulo.ToLower().Contains(titulo.ToLower())).ToList();
+        //Peliculas = servicioPeliculas.Obtenerpeliculas()
+       // .Where (x => x.Titulo.ToLower().Contains(titulo.ToLower())).ToList();
 
         Console.WriteLine($"titulo:{titulo}");
         Console.WriteLine($"generoId:{generoId}");
@@ -88,7 +88,7 @@
 
     private void Limpiar()
     {
-        Peliculas = servicioPeliculas.Obtenerpeliculas();
+        //Peliculas = servicioPeliculas.Obtenerpeliculas();
         titulo = "";
         generoId = 0;
         futurosEstrenos=false;

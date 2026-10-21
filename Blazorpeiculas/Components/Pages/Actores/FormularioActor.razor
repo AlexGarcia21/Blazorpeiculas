@@ -1,7 +1,9 @@
 ﻿
     <FormularioEntidad Entidad="Actor" FormularioPosteadoConExito="FormularioPosteadoConExito"
                        PosteoEnCurso="PosteoEnCurso" OnValidSubmit="OnValidSubmit"
-                       FormularioInvalido="FormularioInvalido">
+                       FormularioInvalido="FormularioInvalido"
+    DestinoCancelar="/actores"
+    >
 
     <BPInputText Label="Nombre" @bind-Value="@Actor.Nombre" />
     <BPInputDate Label="Fecha de Nacimiento" @bind-Value="@Actor.FechaNacimiento" />
