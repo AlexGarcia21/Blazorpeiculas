@@ -23,5 +23,6 @@ public class Pelicula
 
     public List<GeneroPelicula> GenerosPeliculas { get; set; } = [];
     public List<ActorPelicula> ActoresPeliculas { get; set; } = [];
+    public List<VotoPelicula> VotosPeliculas { get; set; } = [];
     public string? TituloFormateadoParaURL => Titulo?.Replace(" ", "-");
 }

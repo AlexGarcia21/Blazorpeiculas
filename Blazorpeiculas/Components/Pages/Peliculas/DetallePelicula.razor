@@ -3,7 +3,8 @@
 @using Microsoft.AspNetCore.WebUtilities
 @inject IServicioPeliculas servicioPeliculas
 @inject NavigationManager navigationManager
-
+@inject IJSRuntime JS 
+@inject IServicioVoto servicioVoto
 @if(modelo is null)
 {
     <Cargando/>
@@ -14,15 +15,18 @@ else
     <div class="d-flex justify-content-between">
         <h2>@modelo.Pelicula.Titulo (@modelo.Pelicula.FechaLanzamiento?.ToString("yyyy"))</h2>
         <div>
-            <BPLink Href=@($"/peliculas/editar/{modelo.Pelicula.Id}")>Editar</BPLink>
-            <BPBoton OnClick="Borrar"
-                     MensajeConfirmacion="@($"¿Desea borrar la película {modelo.Pelicula.Titulo}?")">
-                Borrar
-            </BPBoton>
-            <BPBoton Variante="Variante.Error">Borrar</BPBoton>
+            <AuthorizeView Roles="administrador">
+                <BPLink Href=@($"/peliculas/editar/{modelo.Pelicula.Id}")>Editar</BPLink>
+                <BPBoton OnClick="Borrar"
+                         MensajeConfirmacion="@($"¿Desea borrar la película {modelo.Pelicula.Titulo}?")">
+                    Borrar
+                </BPBoton>
+                <BPBoton Variante="Variante.Error">Borrar</BPBoton>
+            </AuthorizeView>
+            
         </div>
     </div>
-
+     
     @foreach (var genero in modelo.Generos)
     {
         <a class="me-2 badge bg-primary rounded-pill text-decoration-none"
@@ -32,7 +36,9 @@ else
     <span>
         | @modelo.Pelicula.FechaLanzamiento?.ToString("dd MMM yyyy")
         | Promedio: @modelo.PromedioVotos.ToString("0.#")/5
-        | Tu voto: @modelo.VotoUsuario.ToString()
+        | Tu voto: Rating MaximoPuntaje="5" PuntajeSeleccionado="@modelo.VotoUsuario" 
+        OnRating="OnRating"
+        />
     </span>
 
     <div class="d-flex mt-2">
@@ -75,8 +81,9 @@ else
 
 @code {
     [Parameter] public int Id { get; set; }
-    [Parameter] public string NombrePelicula { get; set; }
+    [Parameter] public string? NombrePelicula { get; set; }
     private PeliculaDetalleDTO? modelo;
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationStateTask{ get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -103,5 +110,29 @@ else
         await servicioPeliculas.Borrar(Id);
         navigationManager.NavigateTo("/");
     }
+
+    private async Task OnRating(int voto)
+    {
+        var authenticationState = await AuthenticationStateTask!;
+        var usuarioEstaAutenticado = authenticationState.User.Identity is not null
+    && authenticationState.User.Identity.IsAuthenticated;
+
+        if (usuarioEstaAutenticado)
+        {
+            var votoPeliculaDTO = new VotoPeliculaDTO(Id, voto);
+            await servicioVoto.Votar(votoPeliculaDTO);
+            await JS.MostrarAlertaExitosa("Exitoso", "La votación fue guardada con éxito");
+        }
+        else
+        {
+            await JS.MostrarAlertaError("Error", "debe loguearse para poder votar");
+        }
+
+
+
+
+         
+     }
+
 
 }

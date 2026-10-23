@@ -1,5 +1,7 @@
 ﻿@page "/peliculas/crear"
+@attribute [Authorize(Roles = "administrador")]
 @using Blazorpeiculas.Components.Pages.Actores
+
 @inject NavigationManager navigationManager
 @inject IServiciosGeneros servicioGeneros
 @inject IServicioPeliculas servicioPeliculas

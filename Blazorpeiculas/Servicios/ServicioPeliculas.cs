@@ -4,11 +4,12 @@ using Blazorpeiculas.Entidades;
 using Blazorpeiculas.Utilidades;
 using BlazorPeliculas.Entidades;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Blazorpeiculas.Servicios;
 
 public class ServicioPeliculas(IDbContextFactory<ApplicationDbContext> dbFactory,
-    IAlmacenadorArchivos almacenadorArchivos) : IServicioPeliculas
+    IAlmacenadorArchivos almacenadorArchivos, IHttpContextAccessor httpContextAccessor) : IServicioPeliculas
 {
     private readonly string contenedor = "peliculas";
 
@@ -125,6 +126,16 @@ public class ServicioPeliculas(IDbContextFactory<ApplicationDbContext> dbFactory
         }
 
 
+
+        if (parametros.MasVotadas)
+        {
+            peliculasQueryable = peliculasQueryable.OrderByDescending(p =>
+                p.VotosPeliculas.Average(vp => vp.Voto));
+        }
+
+
+
+
         var peliculas = await peliculasQueryable.Paginar(parametros.PaginacionDTO).ToListAsync();
         var conteo = await peliculasQueryable.CountAsync();
 
@@ -168,8 +179,37 @@ public class ServicioPeliculas(IDbContextFactory<ApplicationDbContext> dbFactory
         {
             return null;
         }
-        var promedioVoto = 4;
-        var votoUsuario = 5;
+
+
+
+        var promedioVoto = 0.0;
+        var votoUsuario = 0;
+
+        if (await context.VotosPeliculas.AnyAsync(x => x.PeliculaId == id))
+        {
+            promedioVoto = await context.VotosPeliculas.Where(x => x.PeliculaId == id)
+                .AverageAsync(x => x.Voto);
+
+            if (httpContextAccessor.HttpContext is not null
+    && httpContextAccessor.HttpContext.User.Identity!.IsAuthenticated)
+            {
+                var usuarioId = httpContextAccessor.HttpContext
+                    .User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+
+                var votoUsuarioDB = await context.VotosPeliculas
+                    .FirstOrDefaultAsync(x => x.PeliculaId == id && x.UsuarioId == usuarioId);
+
+                if (votoUsuarioDB is not null)
+                {
+                    votoUsuario = votoUsuarioDB.Voto;
+                }
+            }
+
+        }
+
+
+
+
 
         var modelo = new PeliculaDetalleDTO();
         modelo.Pelicula = pelicula;

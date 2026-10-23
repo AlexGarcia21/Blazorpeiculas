@@ -1,10 +1,11 @@
 ﻿using Blazorpeiculas.Entidades;
 using BlazorPeliculas.Entidades;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blazorpeiculas.Datos;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
@@ -18,6 +19,7 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity< GeneroPelicula > ().HasKey(x => new { x.GeneroId, x.PeliculaId });
         modelBuilder.Entity<ActorPelicula>().HasKey(x => new { x.ActorId, x.PeliculaId });
 
@@ -28,5 +30,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Pelicula> Peliculas { get; set; }
     public DbSet<GeneroPelicula> GenerosPeliculas { get; set; }
     public DbSet<ActorPelicula> ActoresPeliculas { get; set; }
+    public DbSet<VotoPelicula> VotosPeliculas { get; set; }
 }
     
