@@ -89,7 +89,7 @@ public class ServicioSeguridad(IDbContextFactory<ApplicationDbContext> dbFactory
 
 
         if (!resultado.Succeeded)
-        {
+    {
             return ResultadoAccion.NotienePermiso;
         }
 

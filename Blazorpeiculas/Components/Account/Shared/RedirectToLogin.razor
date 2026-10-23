@@ -16,7 +16,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
-        {
+    {
             return;
         }
         await JS.InvokeVoidAsync("postearForm", "logout-form");
