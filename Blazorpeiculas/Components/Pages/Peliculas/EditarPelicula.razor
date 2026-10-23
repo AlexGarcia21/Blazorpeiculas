@@ -1,5 +1,6 @@
 ﻿@page "/peliculas/editar/{Id:int}"
 @inject NavigationManager navigationManager
+@inject IServicioPeliculas servicioPeliculas
 
 <h3>EditarPelicula</h3>
 
@@ -27,55 +28,54 @@ else
 
     private List<Generos> GenerosNoSeleccionados = new List<Generos>();
     private List<Generos> GenerosSeleccionados = new List<Generos>();
-	private List<Actor> ActoresSeleccionados = [];
+    private List<Actor> ActoresSeleccionados = [];
 
-    protected override void OnInitialized()
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        pelicula = new()
+        if (!firstRender)
         {
-            Id = Id,
-            Titulo = "Peli 1",
-            FechaLanzamiento = new DateTime(2012, 05, 25),
-            EnCartelera = true,
-            Trailer = "abc",
-            PosterURL = "https://fotografias-2.larazon.es/assets/2026/04/luffy-gear-5-nuevo.jpg?width=1900&height=1069"
-        };
+            return;
+        }
 
-        GenerosNoSeleccionados = new List<Generos>()
-{
-    new Generos() { Id = 1, Nombre = "Comedia" },
-    new Generos() { Id = 3, Nombre = "Acción" },
-    new Generos() { Id = 4, Nombre = "Sci-fi" },
-};
+        await Task.Yield();
 
-        GenerosSeleccionados = new List<Generos>()
-{
-    new Generos { Id = 2, Nombre = "Drama" }
-};
+        var modelo = await servicioPeliculas.ObtenerEditarPelicula(Id);
 
-        ActoresSeleccionados = new()
-{
-    new() { Id = 1, Nombre = "Bob esponja", Personaje = "bob esponja2", FotoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlToAPP3incqrXTkvbfFMlRZ93a7YwwOBJQ339YqNnxQ&s=10" }
-};
-
+        if(modelo is null)
+        {
+            navigationManager.NavigateTo("/");
+            return; 
+        }
+        pelicula = modelo.Pelicula;
+        GenerosSeleccionados = modelo.GenerosSeleccionados;
+        GenerosNoSeleccionados = modelo.GenerosNoSeleccionados;
+        ActoresSeleccionados = modelo.Actores;
+        StateHasChanged();
     }
+
+
+
+
+
     private async Task Editar()
     {
         if (!posteoEnCurso)
         {
             posteoEnCurso = true;
-            Console.WriteLine("Ejecutando método Editar");
-            await Task.Delay(2000);
-            Console.WriteLine($"Titulo: {pelicula.Titulo}");
-            Console.WriteLine($"Fecha de lanzamiento: {pelicula.FechaLanzamiento}");
-            Console.WriteLine($"¿Hay imagen?: {pelicula.PosterArchivo is not null}");
-            Console.WriteLine($"En cartelera: {pelicula.EnCartelera}");
+           
+            StateHasChanged();
+            await Task.Yield();
 
-            Console.WriteLine("--Generos--");
-            pelicula.GenerosPeliculas.ForEach(x => Console.WriteLine(x.GeneroId));
+            var browserFile = pelicula!.PosterArchivo;
 
-            Console.WriteLine("--Actores--");
-            pelicula.ActoresPeliculas.ForEach(x => Console.WriteLine($"{x.ActorId} - {x.Personaje}"));
+            if (browserFile is not null)
+            {
+                pelicula.Archivo = browserFile.ConvertirAArchivoDTO();
+            }
+
+            await servicioPeliculas.Actualizar(pelicula);
+
 
             posteoEnCurso = false;
             formularioPosteadoConExito = true;

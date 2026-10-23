@@ -61,13 +61,13 @@ else
                 pelicula.Archivo = browserfile.ConvertirAArchivoDTO();
             }
 
-            await servicioPeliculas.Crear(pelicula);
+            var id = await servicioPeliculas.Crear(pelicula);
 
 
             posteoEnCurso = false;
             formularioPosteadoConExito = true;
             StateHasChanged();
-            navigationManager.NavigateTo("/peliculas");
+            navigationManager.NavigateTo($"/peliculas/{id}");
         }
     }
 }
