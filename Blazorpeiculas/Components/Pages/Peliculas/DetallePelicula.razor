@@ -14,12 +14,15 @@ else
     <div class="d-flex justify-content-between">
         <h2>@modelo.Pelicula.Titulo (@modelo.Pelicula.FechaLanzamiento?.ToString("yyyy"))</h2>
         <div>
-            <BPLink Href=@($"/peliculas/editar/{modelo.Pelicula.Id}")>Editar</BPLink>
-            <BPBoton OnClick="Borrar"
-                     MensajeConfirmacion="@($"¿Desea borrar la película {modelo.Pelicula.Titulo}?")">
-                Borrar
-            </BPBoton>
-            <BPBoton Variante="Variante.Error">Borrar</BPBoton>
+            <AuthorizeView Roles="administrador">
+                <BPLink Href=@($"/peliculas/editar/{modelo.Pelicula.Id}")>Editar</BPLink>
+                <BPBoton OnClick="Borrar"
+                         MensajeConfirmacion="@($"¿Desea borrar la película {modelo.Pelicula.Titulo}?")">
+                    Borrar
+                </BPBoton>
+                <BPBoton Variante="Variante.Error">Borrar</BPBoton>
+            </AuthorizeView>
+            
         </div>
     </div>
 

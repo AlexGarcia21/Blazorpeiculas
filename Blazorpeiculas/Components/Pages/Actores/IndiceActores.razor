@@ -1,5 +1,5 @@
 ﻿@page "/actores"
-
+@attribute [Authorize(Roles = "administrador")]
 @inject IServicioActores servicioActores
 <h3>IndiceActores</h3>
 

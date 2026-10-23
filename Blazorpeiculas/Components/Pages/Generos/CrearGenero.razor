@@ -6,6 +6,7 @@
 @inject IJSRuntime JS
 @inject IServiciosGeneros serviciosGeneros
 @inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "administrador")]
 <h3>Crear Genero</h3>
 
 <FormularioGenero FormularioPosteadoConExito="formularioPosteadoConExito"

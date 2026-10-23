@@ -1,6 +1,8 @@
 ﻿@page "/generos"
 @using Blazorpeiculas.DTOs
+@using Microsoft.AspNetCore.Authorization
 @inject IServiciosGeneros serviciosGeneros
+@attribute [Authorize(Roles="administrador")]
 <h3>IndiceGeneros</h3>
 <div>
     <BPLink Href="generos/crear">
